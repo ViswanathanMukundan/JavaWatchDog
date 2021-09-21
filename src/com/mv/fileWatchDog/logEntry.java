@@ -13,7 +13,7 @@ import java.nio.file.*;
 
 public class logEntry {
 	
-	private static String LOG_SOURCE_FILE = "C:\\Users\\Vishy\\Desktop\\logFile.txt";
+	private static String LOG_SOURCE_FILE = "PATH TO THE LOG FILE";
 	Path fileName = Path.of(LOG_SOURCE_FILE);
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy::: HH:mm:ss");
 	
@@ -22,7 +22,7 @@ public class logEntry {
 		byte bytes[] = ("\r\n" + formatter.format(new Date()) + ": " + entry.toString()).getBytes();
 		try 
 		{
-			Files.write(fileName, bytes, StandardOpenOption.APPEND);
+			Files.write(fileName, bytes, StandardOpenOption.APPEND); //APPEND THE ENTRY INSTEAD OF OVERWRITING THE EXISTING ONES.
 		}
 		catch (IOException e) 
 		{
