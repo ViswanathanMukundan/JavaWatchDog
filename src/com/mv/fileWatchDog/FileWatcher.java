@@ -1,6 +1,6 @@
 package com.mv.fileWatchDog;
 /*
-TEST CODE TO MONITOR INDIVIDUAL FILES FOR CHANGES
+CODE TO MONITOR INDIVIDUAL FILES FOR CHANGES
 */
 
 import java.io.File;
@@ -65,18 +65,5 @@ public class FileWatcher
 		}
 		return false;
 	}
-
-	/*public static void main(String[] args) throws FileNotFoundException
-	{
-		String filePath = "C:\\Users\\Vishy\\Desktop\\javaSample.txt";
-		FileWatcher watchDog = new FileWatcher(filePath);
-		while(true)
-		{
-			if(watchDog.isFileUpdated(filePath))
-			{
-				System.out.println("File updated at::: " + new java.text.SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date(watchDog.timeStamp)));
-			}
-		}
-	}*/
 }
 
