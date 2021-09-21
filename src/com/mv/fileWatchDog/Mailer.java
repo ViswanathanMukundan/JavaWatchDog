@@ -1,7 +1,8 @@
 package com.mv.fileWatchDog;
 
 /*
- * E-MAILMAN
+ * CLASS TO SEND A MAIL TO SPECIFIC RECIPIENTS.
+ THIS CLASS REQUIRES ADDITIONAL JAR FILES, javax.mail.jar, smtp.jar, activation.jar
  TO-DO: 
   -> ADD MULTIPLE RECEIVERS.
   -> WRAP WITHIN THREAD
@@ -13,11 +14,11 @@ import javax.mail.internet.*;
 
 public class Mailer 
 {
-	private String MAIL_SENDER = "SENDER'S EMAIL ID HERE";
-	private String MAIL_RECEIVER = "RECEIVER'S EMAIL ID HERE";
+	private String MAIL_SENDER = "SENDER'S EMAIL ID HERE";  // ADD THE SENDER'S EMAIL ID TO THIS VARIABLE
+	private String MAIL_RECEIVER = "RECEIVER'S EMAIL ID HERE"; // ADD THE RECEIVER'S EMAIL ID TO THIS VARIABLE
 	private String MAIL_HOST = "smtp.gmail.com"; //ADD ANY SMTP HOST IF CONFIGURED
-	private int MAIL_PORT = 587;
-	private String SENDER_PWD = "SENDER'S EMAIL PASSWORD";
+	private int MAIL_PORT = 587; //ADD THE PORT, DEPENDING ON THE PROTOCOL/SERVER USED
+	private String SENDER_PWD = "SENDER'S EMAIL PASSWORD";  //SENDER'S EMAIL PASSWORD, REQUIRED FOR AUTHENTICATION
 	
 	void sendEmail(String subject, String body) throws MessagingException
 	{
