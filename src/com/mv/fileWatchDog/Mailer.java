@@ -15,15 +15,15 @@ public class Mailer
 {
 	private String MAIL_SENDER = "SENDER'S EMAIL ID HERE";
 	private String MAIL_RECEIVER = "RECEIVER'S EMAIL ID HERE";
-	private String MAIL_HOST = "smtp.gmail.com";
-	private int MAIL_PORT = 25;
+	private String MAIL_HOST = "smtp.gmail.com"; //ADD ANY SMTP HOST IF CONFIGURED
+	private int MAIL_PORT = 587;
 	private String SENDER_PWD = "SENDER'S EMAIL PASSWORD";
 	
 	void sendEmail(String subject, String body) throws MessagingException
 	{
 		Properties props = new Properties();
 		props.put("mail.smtp.host", this.MAIL_HOST);
-		props.put("mail.smtp.port", 587);
+		props.put("mail.smtp.port", this.MAIL_PORT);
 		props.put("mail.smtp.user", this.MAIL_SENDER);
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
@@ -53,12 +53,12 @@ public class Mailer
 		}
 	}
 	
-	public static void main(String[] args) throws MessagingException
+	/*public static void main(String[] args) throws MessagingException	//TEST 
 	{
 		String subject = "Reg. log readings.";  //SUBJECT OF THE EMAIL. CAN BE ANYTHING
 		String mailBody = "Unusual activity has been recorded in the log. Kindly note and take action. Regards, admin."; //BODY OF THE EMAIL.
 		Mailer mailer = new Mailer();
 		mailer.sendEmail(subject, mailBody);
-	}
+	}*/
 
 }
