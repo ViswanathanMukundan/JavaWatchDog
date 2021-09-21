@@ -1,6 +1,8 @@
 package com.mv.fileWatchDog;
 /*
-CODE TO MONITOR INDIVIDUAL FILES FOR CHANGES
+THIS CLASS IS USED TO MONITOR INDIVIDUAL FILES FOR CHANGES.
+THE APPROACH USED AS OF NOW IS SIMPLISTIC, THE FILE CONTENTS ARE READ INITIALLY AND SET TO A VARIABLE. WHEN THE METHOD IS INVOKED, THE FILE CONTENTS ARE READ AGAIN AND BOTH VALUES ARE COMPARED.
+IF THERE IS ANY DISCREPANCY, IT IMPLIES THAT THE FILE HAS BEEN UPDATED.
 */
 
 import java.io.File;
@@ -9,59 +11,51 @@ import java.util.Scanner;
 
 public class FileWatcher 
 {
-	private long timeStamp;
 	private File file;
 	private String originalContent;
 	private String modifiedContent;
 	
 	logEntry writer = new logEntry();
-	
-	public long getTimeStamp() {
-		return timeStamp;
-	}
 
 	public File getFile() {
-		return file;
+		return this.file;
 	}
 
 	public String getOriginalContent() {
-		return originalContent;
+		return this.originalContent;
 	}
 
 	public String getModifiedContent() {
-		return modifiedContent;
+		return this.modifiedContent;
 	}
 
+	//CONSTRUCTOR TO INITIALIZE THE FILEWATCHER BY SETTING THE TARGET FILE'S PATH.
 	FileWatcher(String filePath) throws FileNotFoundException
 	{
 		this.file = new File(filePath);
 		this.originalContent = fileReader(filePath);
 	}
 	
+	//GET THE CONTENTS OF THE FILE AS A STRING
 	private String fileReader(String filePath) throws FileNotFoundException
 	{
 		String contents = "";
 		Scanner reader = new Scanner(this.file);
-		//reader.useDelimiter("\\Z");
 		while(reader.hasNext())
 			contents += reader.next();
 		reader.close();
 		return contents;
 	}
 	
+	// METHOD TO MONITOR THE SPECIFIED FILE AND ALERT IN CASE OF ANY UPDATE. (REGARDLESS OF WHETHER CONTENT IS ADDED, OR REMOVED)
+	// A HEAVY ASSUMPTION IS MADE HERE, SINCE LOG FILE CONTENTS ARE TYPICALLY NOT DELETED.
 	boolean isFileUpdated(String filePath) throws FileNotFoundException
 	{
-		this.file = new File(filePath); 
-		long modifiedTimeStamp = file.lastModified();
-		if(this.timeStamp != modifiedTimeStamp)
+		this.modifiedContent = fileReader(filePath);
+		if(!(getOriginalContent().equals(getModifiedContent())))
 		{
-			this.timeStamp = modifiedTimeStamp;
-			this.modifiedContent = fileReader(filePath);
-			if(!(this.originalContent.equals(this.modifiedContent)))
-			{
-				this.originalContent = this.modifiedContent;
-				return true;
-			}
+			this.originalContent = this.modifiedContent;
+			return true;
 		}
 		return false;
 	}
