@@ -14,3 +14,4 @@ Some improvements to be made:
   1. Optimize the solution
   2. Try to make the files run on individual threads.
   3. As of now, emails are triggered in case of any modification. Try to restrict the triggers to specific events.
+  4. Mailer takes about 8 seconds to send a single mail. 
