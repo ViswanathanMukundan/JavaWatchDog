@@ -3,6 +3,11 @@ Simple project to monitor a log file and trigger an email message in case of any
 
 The aim of this project is to constantly monitor a specific log file for any changes. If any critical events/warnings are recorded in the log, an email is triggered to a set of users immediately.
 
+Some specific JAR files required:
+  -> activation.jar (JavaBeans activation)
+  -> javax.mail.jar (JavaMail API)
+  -> smtp.jar 
+
 It is understood that the log file is being populated by some other means. For test purposes, the file can be manually modified by entering random text.
 
 Some improvements to be made:
