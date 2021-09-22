@@ -11,12 +11,18 @@ import java.util.Scanner;
 
 public class FileWatcher 
 {
+	private long timeStamp;
 	private File file;
 	private String originalContent;
 	private String modifiedContent;
 	
 	logEntry writer = new logEntry();
 
+	public long getTimeStamp()
+	{
+		return this.timeStamp;
+	}
+	
 	public File getFile() {
 		return this.file;
 	}
@@ -28,7 +34,12 @@ public class FileWatcher
 	public String getModifiedContent() {
 		return this.modifiedContent;
 	}
-
+	
+	public void setTimeStamp(long newTimeStamp)
+	{
+		this.timeStamp = newTimeStamp;
+	}
+	
 	//CONSTRUCTOR TO INITIALIZE THE FILEWATCHER BY SETTING THE TARGET FILE'S PATH.
 	FileWatcher(String filePath) throws FileNotFoundException
 	{
@@ -54,6 +65,7 @@ public class FileWatcher
 		this.modifiedContent = fileReader(filePath);
 		if(!(getOriginalContent().equals(getModifiedContent())))
 		{
+			setTimeStamp(getFile().lastModified());   //UPDATE THE TIMESTAMP, FOR MAIL PURPOSES
 			this.originalContent = this.modifiedContent;
 			return true;
 		}
