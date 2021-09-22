@@ -5,7 +5,12 @@ TEST CODE TO MONITOR INDIVIDUAL FILES FOR CHANGES
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Scanner;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class FileWatcher 
 {
@@ -13,13 +18,15 @@ public class FileWatcher
 	private File file;
 	private String originalContent;
 	private String modifiedContent;
+	private int lineCount;
 	
 	logEntry writer = new logEntry();
 	
-	public long getTimeStamp() {
-		return timeStamp;
+	public long getTimeStamp()
+	{
+		return this.timeStamp;
 	}
-
+	
 	public File getFile() {
 		return file;
 	}
@@ -31,11 +38,17 @@ public class FileWatcher
 	public String getModifiedContent() {
 		return modifiedContent;
 	}
-
-	FileWatcher(String filePath) throws FileNotFoundException
+	
+	public void setTimeStamp(long newTimeStamp)
+	{
+		this.timeStamp = newTimeStamp;
+	}
+	
+	FileWatcher(String filePath) throws IOException
 	{
 		this.file = new File(filePath);
 		this.originalContent = fileReader(filePath);
+		this.lineCount = numberOfLines(filePath);
 	}
 	
 	private String fileReader(String filePath) throws FileNotFoundException
@@ -49,34 +62,48 @@ public class FileWatcher
 		return contents;
 	}
 	
-	boolean isFileUpdated(String filePath) throws FileNotFoundException
+	/*
+	 * NAIVELY CHECKING FILE UPDATE BY COMPARING LINE COUNTS AT DIFFERENT POINTS OF TIME.
+	 * SINCE THE CURRENT USE CASE IS FOR LOG WATCHING, AND LOG ENTRIES ARE ADDED TO NEW LINES, THIS WORKS.
+	 * HOWEVER, FOR CONFIG FILES, THE APPROACH USED WILL DIFFER.
+	 * */
+	boolean isFileUpdated(String filePath) throws IOException
 	{
-		this.file = new File(filePath); 
-		long modifiedTimeStamp = file.lastModified();
-		if(this.timeStamp != modifiedTimeStamp)
+		this.modifiedContent = fileReader(filePath);
+		/*if(!(getOriginalContent().equals(getModifiedContent())))
 		{
-			this.timeStamp = modifiedTimeStamp;
-			this.modifiedContent = fileReader(filePath);
-			if(!(this.originalContent.equals(this.modifiedContent)))
-			{
-				this.originalContent = this.modifiedContent;
-				return true;
-			}
+			setTimeStamp(getFile().lastModified());
+			System.out.println("Updated content::: " + StringUtils.difference(this.originalContent, this.modifiedContent));
+			System.out.println("No of lines::: " + numberOfLines(filePath));
+			this.originalContent = this.modifiedContent;
+			return true;
+		}*/
+		
+		int updatedLineCount = numberOfLines(filePath);
+		if(this.lineCount != updatedLineCount)
+		{
+			this.lineCount = updatedLineCount;
+			setTimeStamp(getFile().lastModified());
+			this.originalContent = this.modifiedContent;
+			return true;
 		}
+		
 		return false;
+		 
+	}
+	/*
+	 * GETTING THE LINE COUNT OF THE FILE
+	 * */
+	int numberOfLines(String filePath) throws IOException
+	{
+		LineNumberReader lineReader = new LineNumberReader(new FileReader(filePath));
+		while(lineReader.skip(Long.MAX_VALUE) > 0)
+		{}
+		int result = lineReader.getLineNumber() + 1;
+		lineReader.close();
+		return result;
+		
 	}
 
-	/*public static void main(String[] args) throws FileNotFoundException
-	{
-		String filePath = "C:\\Users\\Vishy\\Desktop\\javaSample.txt";
-		FileWatcher watchDog = new FileWatcher(filePath);
-		while(true)
-		{
-			if(watchDog.isFileUpdated(filePath))
-			{
-				System.out.println("File updated at::: " + new java.text.SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(new Date(watchDog.timeStamp)));
-			}
-		}
-	}*/
 }
 
