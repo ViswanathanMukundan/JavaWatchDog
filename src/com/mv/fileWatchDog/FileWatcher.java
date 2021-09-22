@@ -74,17 +74,9 @@ public class FileWatcher
 	 * */
 	boolean isFileUpdated(String filePath) throws IOException
 	{
-		this.modifiedContent = fileReader(filePath);
-		/*if(!(getOriginalContent().equals(getModifiedContent())))
-		{
-			setTimeStamp(getFile().lastModified());
-			System.out.println("Updated content::: " + StringUtils.difference(this.originalContent, this.modifiedContent));
-			System.out.println("No of lines::: " + numberOfLines(filePath));
-			this.originalContent = this.modifiedContent;
-			return true;
-		}*/
-		
+		this.modifiedContent = fileReader(filePath);		
 		int updatedLineCount = numberOfLines(filePath);
+		
 		if(this.lineCount != updatedLineCount)
 		{
 			this.lineCount = updatedLineCount;
@@ -98,7 +90,7 @@ public class FileWatcher
 	}
 
 	/*
-	 * GETTING THE LINE COUNT OF THE FILE
+	 * GETTING THE NUMBER OF LINES IN THE FILE
 	 * */
 	int numberOfLines(String filePath) throws IOException
 	{
