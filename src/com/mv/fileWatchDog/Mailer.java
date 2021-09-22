@@ -1,5 +1,12 @@
 package com.mv.fileWatchDog;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 /*
  * CLASS TO SEND A MAIL TO SPECIFIC RECIPIENTS. THIS CLASS MAKES USE OF THE JAVAMAIL API.
  THIS CLASS REQUIRES ADDITIONAL JAR FILES, javax.mail.jar, smtp.jar, activation.jar
@@ -14,13 +21,15 @@ import javax.mail.internet.*;
 
 public class Mailer 
 {
+
 	private String MAIL_SENDER = "SENDER'S EMAIL ID HERE";  // ADD THE SENDER'S EMAIL ID TO THIS VARIABLE
 	private String MAIL_RECEIVER = "RECEIVER'S EMAIL ID HERE"; // ADD THE RECEIVER'S EMAIL ID TO THIS VARIABLE
 	private String MAIL_HOST = "smtp.gmail.com"; //ADD ANY SMTP HOST IF CONFIGURED
 	private int MAIL_PORT = 587; //ADD THE PORT, DEPENDING ON THE PROTOCOL/SERVER USED
 	private String SENDER_PWD = "SENDER'S EMAIL PASSWORD";  //SENDER'S EMAIL PASSWORD, REQUIRED FOR AUTHENTICATION
+
 	
-	void sendEmail(String subject, String body) throws MessagingException
+	Mailer() throws AddressException, MessagingException
 	{
 		Properties props = new Properties();
 		props.put("mail.smtp.host", this.MAIL_HOST);
@@ -29,19 +38,24 @@ public class Mailer
 		props.put("mail.smtp.starttls.enable", "true");
 		props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 		props.put("mail.smtp.auth", "true");
+
 		
-		Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+		this.session = Session.getInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication()
 			{
 				return new PasswordAuthentication(MAIL_SENDER, SENDER_PWD);
 			}
 		});
-		//session.setDebug(true);
+		
+		this.message = new MimeMessage(this.session);
+		message.setFrom(new InternetAddress(this.MAIL_SENDER));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.MAIL_RECEIVER));
+	}
+	
+	void sendEmail(String subject, String body) throws MessagingException, UnknownHostException, IOException
+	{
 		try
 		{
-			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(this.MAIL_SENDER));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.MAIL_RECEIVER));
 			message.setSubject(subject);
 			message.setText(body);
 			
@@ -52,14 +66,8 @@ public class Mailer
 		{
 			e.printStackTrace();
 		}
+		
 	}
 	
-	/*public static void main(String[] args) throws MessagingException	//TEST 
-	{
-		String subject = "Reg. log readings.";  //SUBJECT OF THE EMAIL. CAN BE ANYTHING
-		String mailBody = "Unusual activity has been recorded in the log. Kindly note and take action. Regards, admin."; //BODY OF THE EMAIL.
-		Mailer mailer = new Mailer();
-		mailer.sendEmail(subject, mailBody);
-	}*/
 
 }

@@ -7,7 +7,12 @@ IF THERE IS ANY DISCREPANCY, IT IMPLIES THAT THE FILE HAS BEEN UPDATED.
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Scanner;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class FileWatcher 
 {
@@ -15,6 +20,7 @@ public class FileWatcher
 	private File file;
 	private String originalContent;
 	private String modifiedContent;
+	private int lineCount;
 	
 	logEntry writer = new logEntry();
 
@@ -40,11 +46,13 @@ public class FileWatcher
 		this.timeStamp = newTimeStamp;
 	}
 	
+
 	//CONSTRUCTOR TO INITIALIZE THE FILEWATCHER BY SETTING THE TARGET FILE'S PATH.
-	FileWatcher(String filePath) throws FileNotFoundException
+	FileWatcher(String filePath) throws IOException
 	{
 		this.file = new File(filePath);
 		this.originalContent = fileReader(filePath);
+		this.lineCount = numberOfLines(filePath);
 	}
 	
 	//GET THE CONTENTS OF THE FILE AS A STRING
@@ -58,18 +66,49 @@ public class FileWatcher
 		return contents;
 	}
 	
-	// METHOD TO MONITOR THE SPECIFIED FILE AND ALERT IN CASE OF ANY UPDATE. (REGARDLESS OF WHETHER CONTENT IS ADDED, OR REMOVED)
-	// A HEAVY ASSUMPTION IS MADE HERE, SINCE LOG FILE CONTENTS ARE TYPICALLY NOT DELETED.
-	boolean isFileUpdated(String filePath) throws FileNotFoundException
+
+	/*
+	 * NAIVELY CHECKING FILE UPDATE BY COMPARING LINE COUNTS AT DIFFERENT POINTS OF TIME.
+	 * SINCE THE CURRENT USE CASE IS FOR LOG WATCHING, AND LOG ENTRIES ARE ADDED TO NEW LINES, THIS WORKS.
+	 * HOWEVER, FOR CONFIG FILES, THE APPROACH USED WILL DIFFER.
+	 * */
+	boolean isFileUpdated(String filePath) throws IOException
 	{
 		this.modifiedContent = fileReader(filePath);
-		if(!(getOriginalContent().equals(getModifiedContent())))
+		/*if(!(getOriginalContent().equals(getModifiedContent())))
 		{
-			setTimeStamp(getFile().lastModified());   //UPDATE THE TIMESTAMP, FOR MAIL PURPOSES
+			setTimeStamp(getFile().lastModified());
+			System.out.println("Updated content::: " + StringUtils.difference(this.originalContent, this.modifiedContent));
+			System.out.println("No of lines::: " + numberOfLines(filePath));
+			this.originalContent = this.modifiedContent;
+			return true;
+		}*/
+		
+		int updatedLineCount = numberOfLines(filePath);
+		if(this.lineCount != updatedLineCount)
+		{
+			this.lineCount = updatedLineCount;
+			setTimeStamp(getFile().lastModified());
 			this.originalContent = this.modifiedContent;
 			return true;
 		}
+		
 		return false;
+		 
+	}
+
+	/*
+	 * GETTING THE LINE COUNT OF THE FILE
+	 * */
+	int numberOfLines(String filePath) throws IOException
+	{
+		LineNumberReader lineReader = new LineNumberReader(new FileReader(filePath));
+		while(lineReader.skip(Long.MAX_VALUE) > 0)
+		{}
+		int result = lineReader.getLineNumber() + 1;
+		lineReader.close();
+		return result;
+		
 	}
 }
 
