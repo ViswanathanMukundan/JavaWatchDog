@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.Scanner;
-
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.lang3.StringUtils;
 
 public class FileWatcher 
@@ -101,6 +101,18 @@ public class FileWatcher
 		lineReader.close();
 		return result;
 		
+	}
+	
+	/*
+	METHOD TO RETURN THE CONTENTS OF THE VERY LAST LINE IN THE FILE.
+	SINCE LOG FILES HAVE THEIR ENTRIES ADDED IN NEW LINES, AND THE LAST LINE CONTAINS
+	THE MOST RECENT ENTRY, THIS METHOD WILL BE USED TO GET ONLY THAT LINE AND CHECK IF A 
+	MAIL EVENT IS REQUIRED TO BE TRIGGERED.
+	*/
+	@SuppressWarnings({ "deprecation", "resource" })
+	String getLastLine(String filePath) throws IOException
+	{
+		return new ReversedLinesFileReader(new File(filePath)).readLine();
 	}
 }
 
