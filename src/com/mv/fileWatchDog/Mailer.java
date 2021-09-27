@@ -17,11 +17,11 @@ import javax.mail.internet.*;
 
 public class Mailer 
 {
-	private String MAIL_SENDER = "viswanathan3141@gmail.com";
-	private String MAIL_RECEIVER = "viswanathanmukundan@gmail.com";
+	private String MAIL_SENDER = "SENDER'S MAIL ID HERE";
+	private String MAIL_RECEIVER = "SINGLE RECEIVER'S MAIL ID HERE";
 	private String MAIL_HOST = "smtp.gmail.com";
 	private int MAIL_PORT = 587;
-	private String SENDER_PWD = "fmv603oc";
+	private String SENDER_PWD = "SENDER'S EMAIL PASSWORD";
 	Properties props = new Properties();
 	Session session;
 	MimeMessage message;
