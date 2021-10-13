@@ -8,7 +8,7 @@ Some specific JAR files required:
   -> javax.mail.jar (JavaMail API)
   -> smtp.jar 
 
-It is understood that the log file is being populated by some other means. For test purposes, the file can be manually modified by entering random text.
+It is assumed that the log file is being populated by some other means. For test purposes, the file can be manually modified by entering random text.
 
 Some improvements to be made:
   1. Optimize the solution
